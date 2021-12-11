@@ -1,22 +1,18 @@
 package ru.gb.antonov.structs;
 
-public class Request {
+public class Request implements IRequest {
 
-    private final Long customerId;
-    private final Causes cause;
+    private final ICustomer customer;
     private       Integer priority;
 
-    public Request (Long cid, Causes c, Integer p) {
-        customerId = cid;
-        cause = c;
-        priority = p;
+    public Request (ICustomer customer, Integer priority) {
+        this.customer = customer;
+        this.priority = priority;
     }
 
-    public Long getCustomerId ()  { return customerId; }
+    @Override public ICustomer getCustomer ()  { return customer; }
 
-    public Causes getCause ()     { return cause; }
+    @Override public void setPriority (Integer value) { priority = value; }
 
-    public Integer getPriority () { return priority; }
-
-    public void setPriority (Integer priority) { this.priority = priority; }
+    @Override public Integer getPriority () { return priority; }
 }

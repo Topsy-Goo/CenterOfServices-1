@@ -2,7 +2,9 @@ package ru.gb.antonov.executant;
 
 public interface IAssistant<T> {
 
-    T       next ();
+    T next ();
+
     boolean hasNext ();
+
     boolean queueRequest (T t);
 }

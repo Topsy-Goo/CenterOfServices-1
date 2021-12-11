@@ -1,45 +1,45 @@
 package ru.gb.antonov;
 
 import ru.gb.antonov.dispatcher.IReceptionist;
-import ru.gb.antonov.structs.Causes;
-import ru.gb.antonov.structs.Request;
-import ru.gb.antonov.structs.Sertificate;
+import ru.gb.antonov.doctypes.ISertificate;
 import ru.gb.antonov.executant.IAssistant;
 import ru.gb.antonov.executant.IExecutant;
 import ru.gb.antonov.publisher.IPublisher;
 import ru.gb.antonov.storage.IStorage;
+import ru.gb.antonov.structs.Causes;
+import ru.gb.antonov.structs.IRequest;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainApp {
 
-    private static final Map<Causes, IAssistant<Request>> assistants = new HashMap<>();
+    private static final Map<Causes, IAssistant<IRequest>> assistants = new HashMap<>();
+    public  static       IFactory factory = Factory.getInstance();
 
     public static void main (String[] args) {
 
         MainApp master = new MainApp();
-        IStorage<Sertificate> requestIStorage = Factory.getSertificateStorage();
+        IStorage<ISertificate> sertificateStorage = factory.getSertificateStorage();
 
-        Causes[] causes = Causes.values();
-        for (Causes c : causes) {
-            IExecutant executant = master.createExecutantFor (c, requestIStorage);
-            new Thread ((Runnable) executant);
+        for (Causes cause : Causes.values()) {
+            IExecutant<ISertificate, IRequest> executant = master.createExecutantFor (cause, sertificateStorage);
+            new Thread (executant);
         }
-        IPublisher    publisher    = Factory.getPublisher (assistants);
-        IReceptionist receptionist = Factory.getReceptionist (publisher);
+        IPublisher<IRequest> requestIPublisher = factory.getPublisher (assistants);
+        IReceptionist receptionist = factory.getReceptionist (requestIPublisher);
 
         simulateCustomersFlow();
     }
 
-    private IExecutant createExecutantFor (Causes cause, IStorage<Sertificate> storage) {
+    private IExecutant<ISertificate, IRequest> createExecutantFor (Causes cause, IStorage<ISertificate> storage) {
 
-        IAssistant<Request> assistant = assistants.get(cause);
+        IAssistant<IRequest> assistant = assistants.get(cause);
         if (assistant == null) {
-            assistant = Factory.newAssistant (cause);
+            assistant = factory.newAssistant (cause);
             assistants.put (cause, assistant);
         }
-        return Factory.newExecutant (cause, assistant, storage);
+        return factory.newSerificateExecutant (cause, assistant, storage);
     }
 
     private static void simulateCustomersFlow () {

@@ -1,6 +1,6 @@
 package ru.gb.antonov.structs;
 
-public class Customer {
+public class Customer implements ICustomer {
 
     private final Long   id;
     private final Causes cause;
@@ -10,6 +10,6 @@ public class Customer {
         this.cause = cause;
     }
 
-    public Long   getId ()    { return id; }
-    public Causes getCause () { return cause; }
+    @Override public Long   getId ()    { return id; }
+    @Override public Causes getCause () { return cause; }
 }
