@@ -1,3 +1,5 @@
 *.class
 /backup.files/кусочки.java
 /Описание.txt
+/backup.files/ICertificateBuilder.java
+/backup.files/LazyFactory.java

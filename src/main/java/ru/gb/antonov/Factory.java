@@ -1,66 +1,61 @@
 package ru.gb.antonov;
 
 import ru.gb.antonov.dispatcher.Dispatcher;
+import ru.gb.antonov.dispatcher.Receptionist;
+import ru.gb.antonov.dispatcher.IDispatcher;
 import ru.gb.antonov.dispatcher.IReceptionist;
-import ru.gb.antonov.doctypes.Sertificate;
-import ru.gb.antonov.structs.*;
-import ru.gb.antonov.doctypes.ISertificate;
-import ru.gb.antonov.executant.Assistant;
-import ru.gb.antonov.executant.SertificatExecutant;
-import ru.gb.antonov.executant.IAssistant;
-import ru.gb.antonov.executant.IExecutant;
+import ru.gb.antonov.doctypes.ICertificate;
+import ru.gb.antonov.executants.Assistant;
+import ru.gb.antonov.executants.CertificatExecutant;
+import ru.gb.antonov.executants.IAssistant;
+import ru.gb.antonov.executants.IExecutant;
 import ru.gb.antonov.publisher.IPublisher;
 import ru.gb.antonov.publisher.RequestPublisher;
 import ru.gb.antonov.storage.IStorage;
-import ru.gb.antonov.storage.SertificateStorage;
+import ru.gb.antonov.storage.CertificateStorage;
+import ru.gb.antonov.structs.*;
 
-import java.util.Map;
+public class Factory implements IFactory<ICertificate> {
 
-public class Factory implements IFactory {
-
-    public  static       IFactory instance;
+    public  static       IFactory<ICertificate> instance;
     private static final Object   MONITOR = new Object();
 
     private Factory () {}
 
-    public static IFactory getInstance () {
-        if (instance == null) {
+    public static IFactory<ICertificate> getInstance () {
+        if (instance == null)
             synchronized (MONITOR) {
-                if (instance == null) {
+                if (instance == null)
                     instance = new Factory();
-                }
             }
-        }
         return instance;
     }
 
-    @Override public IPublisher<IRequest> getPublisher (Map<Causes, IAssistant<IRequest>> assistants) {
-        return RequestPublisher.getInstance (assistants);
+    @Override public IPublisher<IRequest> getSinglePublisher () {   //disp
+        return RequestPublisher.getInstance();
     }
 
-    @Override public IReceptionist getReceptionist (IPublisher<IRequest> requestPublisher) {
-        return Dispatcher.getInstance (requestPublisher);
+    @Override public IDispatcher<ICertificate> getSingleDispatcher () {   //main
+        return Dispatcher.getInstance();
     }
 
-    @Override public IStorage<ISertificate> getSertificateStorage () {
-        return SertificateStorage.getInstance();
+    @Override public IReceptionist<ICertificate> getSingleReceptioniist () {    //main
+        return Receptionist.getInstance();
     }
 
-    @Override public IAssistant<IRequest> newAssistant (Causes cause) {
-        return new Assistant (cause);
+    @Override public IStorage<ICertificate> getSingleStorage () {    //main, disp
+        return CertificateStorage.getInstance();
     }
 
-    @Override public IExecutant<ISertificate, IRequest> newSerificateExecutant (
-                        Causes cause, IAssistant<IRequest> assistant, IStorage<ISertificate> sertStorage)
-    {
-        return new SertificatExecutant (cause, assistant, sertStorage);
+    @Override public IAssistant<IRequest> newAssistant () {     //main
+        return new Assistant ();
     }
 
-    @Override public ISertificate createEmptySertificate () {
-        return Sertificate.createEmpty();
+    @Override public IExecutant<ICertificate, IRequest> newExecutant () {   //main
+        return new CertificatExecutant();
     }
 
-    @Override public IRequest newRequest (ICustomer customer, Integer priority) {
+    @Override public IRequest newRequest (ICustomer customer, Integer priority) {   //recept
         return new Request (customer, priority);
     }
 }

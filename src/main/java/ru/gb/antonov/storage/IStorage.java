@@ -1,14 +1,10 @@
 package ru.gb.antonov.storage;
 
-import ru.gb.antonov.structs.Causes;
-
 import java.util.Collection;
 
-public interface IStorage <S> {
+public interface IStorage <T> {
 
-    S save (S s);
+    T save (T t);
 
-    Collection<S> findAllByCustomerIdAndCause (Long cid, Causes cause);
-
-    Collection<S> findAllByCustomerId (Long cid);
+    Collection<T> findAllByCustomerId (Long cid);
 }

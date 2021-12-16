@@ -3,7 +3,7 @@ package ru.gb.antonov.doctypes;
 import ru.gb.antonov.structs.Causes;
 import java.time.LocalDateTime;
 
-public class Sertificate implements ISertificate {
+public class Certificate implements ICertificate {
 
     private static long nextId = 0L;
     private final  Long id;
@@ -11,7 +11,7 @@ public class Sertificate implements ISertificate {
     private        Long          customerId;
     private        Causes        cause;
 
-    private Sertificate () {
+    private Certificate () {
         id = nextId ++;
         timeStamp = LocalDateTime.now();
     }
@@ -21,37 +21,25 @@ public class Sertificate implements ISertificate {
     @Override public Long getCustomerId () { return customerId; }
     @Override public Causes getCause ()    { return cause; }
 
-//-------------- реализация шаблона builder для создания объекта Sertificate -------------
+//-------------- реализация шаблона builder для создания объекта Certificate -------------
 
-    public static ISertificate createEmpty () { return new Sertificate(); }
+    public static Builder builder() { return new Builder(); }
 
-    @Override public ISertificate withCustomerId (Long cid) {
-        customerId = cid;
-        return this;
-    }
-
-    @Override public ISertificate withCause (Causes c) {
-        cause = c;
-        return this;
-    }
-
-    @Override public ISertificate build () { return this; }
-//*/
-/*    public static Builder builder() { return new Builder(); }
-
+/** Вложенный класс может использовать приватные члены внешнего класса. */
     public static class Builder {
-        private final Sertificate sertificate = new Sertificate();
+
+        private final Certificate certificate = new Certificate();
 
         private Builder(){}
 
         public Builder withCustomerId (Long cid) {
-            sertificate.customerId = cid;
+            certificate.customerId = cid;
             return this;
         }
         public Builder withCause (Causes c) {
-            sertificate.cause = c;
+            certificate.cause = c;
             return this;
         }
-        public Sertificate build () { return sertificate; }
-    }//*/
+        public Certificate build () { return certificate; }
+    }
 }

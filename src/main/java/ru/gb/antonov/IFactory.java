@@ -1,33 +1,27 @@
 package ru.gb.antonov;
 
+import ru.gb.antonov.dispatcher.IDispatcher;
 import ru.gb.antonov.dispatcher.IReceptionist;
-import ru.gb.antonov.doctypes.ISertificate;
-import ru.gb.antonov.executant.IAssistant;
-import ru.gb.antonov.executant.IExecutant;
+import ru.gb.antonov.executants.IAssistant;
+import ru.gb.antonov.executants.IExecutant;
 import ru.gb.antonov.publisher.IPublisher;
 import ru.gb.antonov.storage.IStorage;
-import ru.gb.antonov.structs.Causes;
 import ru.gb.antonov.structs.ICustomer;
 import ru.gb.antonov.structs.IRequest;
 
-import java.util.Map;
+public interface IFactory<T> {
 
-public interface IFactory {
+    IStorage<T> getSingleStorage ();
 
-    IStorage<ISertificate> getSertificateStorage ();
+    IPublisher<IRequest> getSinglePublisher ();
 
-    ISertificate createEmptySertificate ();
+    IDispatcher<T> getSingleDispatcher ();
 
-    IPublisher<IRequest> getPublisher (Map<Causes, IAssistant<IRequest>> assistants);
+    IReceptionist<T> getSingleReceptioniist ();
 
-    IReceptionist getReceptionist (IPublisher<IRequest> requestPublisher);
+    IAssistant<IRequest> newAssistant ();
 
-    IAssistant<IRequest> newAssistant (Causes cause);
-
-    IExecutant<ISertificate, IRequest> newSerificateExecutant (
-            Causes cause,
-            IAssistant<IRequest> assistant,
-            IStorage<ISertificate> sertStorage);
+    IExecutant<T, IRequest> newExecutant ();
 
     IRequest newRequest (ICustomer customer, Integer priority);
 }

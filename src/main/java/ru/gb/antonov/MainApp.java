@@ -1,12 +1,13 @@
 package ru.gb.antonov;
 
+import ru.gb.antonov.dispatcher.IDispatcher;
 import ru.gb.antonov.dispatcher.IReceptionist;
-import ru.gb.antonov.doctypes.ISertificate;
-import ru.gb.antonov.executant.IAssistant;
-import ru.gb.antonov.executant.IExecutant;
-import ru.gb.antonov.publisher.IPublisher;
+import ru.gb.antonov.doctypes.ICertificate;
+import ru.gb.antonov.executants.IAssistant;
+import ru.gb.antonov.executants.IExecutant;
 import ru.gb.antonov.storage.IStorage;
 import ru.gb.antonov.structs.Causes;
+import ru.gb.antonov.structs.CosOperations;
 import ru.gb.antonov.structs.IRequest;
 
 import java.util.HashMap;
@@ -14,35 +15,45 @@ import java.util.Map;
 
 public class MainApp {
 
-    private static final Map<Causes, IAssistant<IRequest>> assistants = new HashMap<>();
-    public  static       IFactory factory = Factory.getInstance();
+    public  static IFactory<ICertificate>      factory = Factory.getInstance();
+    private static IStorage<ICertificate>      sertificateStorage;
+    private static IReceptionist<ICertificate> receptionist;
+    private static final Map<Long, Object>     results = new HashMap<>();
+    private static final Map<CosOperations, IAssistant<IRequest>>        assistants = new HashMap<>();
+    private static final Map<Causes, IExecutant<ICertificate, IRequest>> executants = new HashMap<>();
 
     public static void main (String[] args) {
 
-        MainApp master = new MainApp();
-        IStorage<ISertificate> sertificateStorage = factory.getSertificateStorage();
+        for (CosOperations op : CosOperations.values())
+            assistants.put (op, factory.newAssistant());
 
-        for (Causes cause : Causes.values()) {
-            IExecutant<ISertificate, IRequest> executant = master.createExecutantFor (cause, sertificateStorage);
-            new Thread (executant);
-        }
-        IPublisher<IRequest> requestIPublisher = factory.getPublisher (assistants);
-        IReceptionist receptionist = factory.getReceptionist (requestIPublisher);
+        //Такое создание Executant'ов является упрощением. По идее, эти объекты не должны быть
+        // одинаковыми. Они, как минмиум, должны по различную обрабатывать запросы.
+        for (Causes c : Causes.values())
+            executants.put (c, factory.newExecutant());
+
+        IDispatcher<ICertificate> dispatcher = factory.getSingleDispatcher();
+        dispatcher.run();
+        receptionist = factory.getSingleReceptioniist();
 
         simulateCustomersFlow();
+        dispatcher.stop();
     }
 
-    private IExecutant<ISertificate, IRequest> createExecutantFor (Causes cause, IStorage<ISertificate> storage) {
-
-        IAssistant<IRequest> assistant = assistants.get(cause);
-        if (assistant == null) {
-            assistant = factory.newAssistant (cause);
-            assistants.put (cause, assistant);
-        }
-        return factory.newSerificateExecutant (cause, assistant, storage);
+    public static IAssistant<IRequest> assistantFor (CosOperations operation) {
+        return assistants.get (operation);
     }
 
-    private static void simulateCustomersFlow () {
-        //эмитируем поток клиентов
+    public static IExecutant<ICertificate, IRequest> executantFor (Causes cause) {
+        return executants.get (cause);
     }
+
+    public static IReceptionist<ICertificate> getReceptionist () { return receptionist; }
+
+    public static void putResult (Long requestId, Object result) { results.put (requestId, result); }
+
+    public static Object getResult (Long requestId) { return results.get (requestId); }
+
+    private static void simulateCustomersFlow () { /* имитируем поток клиентов */ }
 }
+

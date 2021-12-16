@@ -1,6 +1,5 @@
-package ru.gb.antonov.executant;
+package ru.gb.antonov.executants;
 
-import ru.gb.antonov.structs.Causes;
 import ru.gb.antonov.structs.IRequest;
 
 import java.util.Comparator;
@@ -8,12 +7,10 @@ import java.util.PriorityQueue;
 
 public class Assistant implements IAssistant<IRequest>  {
 
-    private final  Causes cause;
-    private final  PriorityQueue<IRequest> requests;
+    private final PriorityQueue<IRequest> requests;
 
-    public Assistant (Causes cause) {
-        this.cause = cause;
-        requests = new PriorityQueue<>(Comparator.comparingInt(IRequest::getPriority));
+    public Assistant () {
+        this.requests = new PriorityQueue<>(Comparator.comparingInt (IRequest::getPriority));
     }
 
     @Override public boolean hasNext () { return !requests.isEmpty(); }

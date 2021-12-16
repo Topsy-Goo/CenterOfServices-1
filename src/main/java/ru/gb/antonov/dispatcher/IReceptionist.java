@@ -1,15 +1,10 @@
 package ru.gb.antonov.dispatcher;
 
-import ru.gb.antonov.doctypes.ISertificate;
 import ru.gb.antonov.structs.ICustomer;
 
-import java.util.Collection;
+public interface IReceptionist<T> {
 
-public interface IReceptionist {
+    Long makeService (ICustomer customer);
 
-    boolean receive (ICustomer customer);
-
-    Collection<ISertificate> getSertificatesByCause (ICustomer customer);
-
-    Collection<ISertificate> getSertificates (ICustomer customer);
+    Object resultByRequestId (Long requestId);
 }

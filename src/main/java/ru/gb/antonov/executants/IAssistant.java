@@ -1,4 +1,4 @@
-package ru.gb.antonov.executant;
+package ru.gb.antonov.executants;
 
 public interface IAssistant<T> {
 

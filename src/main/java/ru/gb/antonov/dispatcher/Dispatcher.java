@@ -1,51 +1,56 @@
 package ru.gb.antonov.dispatcher;
 
 import ru.gb.antonov.MainApp;
-import ru.gb.antonov.doctypes.ISertificate;
-import ru.gb.antonov.publisher.IPublisher;
-import ru.gb.antonov.storage.IStorage;
-import ru.gb.antonov.structs.ICustomer;
+import ru.gb.antonov.doctypes.ICertificate;
+import ru.gb.antonov.executants.*;
+import ru.gb.antonov.structs.CosOperations;
 import ru.gb.antonov.structs.IRequest;
 
-import java.util.Collection;
-import java.util.Random;
+public class Dispatcher implements IDispatcher<ICertificate> {
 
-public class Dispatcher implements IReceptionist {
+    private static       Dispatcher instance;
+    private final static Object     MONITOR    = new Object();
+    private              boolean    doRun;
 
-    private       static Dispatcher instance;
-    private final static Object     MONITOR = new Object();
-    private final        IPublisher<IRequest>   publisher;
-    private final        IStorage<ISertificate> storage;
+    protected Dispatcher () {}
 
-    protected Dispatcher (IPublisher<IRequest> p) {
-        publisher = p;
-        storage = MainApp.factory.getSertificateStorage();
-    }
-
-    public static IReceptionist getInstance (IPublisher<IRequest> publisher) {
-        if (instance == null) {
+    public static IDispatcher<ICertificate> getInstance () {
+        if (instance == null)
             synchronized (MONITOR) {
-                if (instance == null) {
-                    instance = new Dispatcher (publisher);
-                }
+                if (instance == null)
+                    instance = new Dispatcher();
             }
-        }
         return instance;
     }
 
-    @Override public boolean receive (ICustomer customer) {
-        int priority = calcPriority();
-        IRequest request = MainApp.factory.newRequest (customer, priority);
-        return publisher.publish (request);
+    @Override public void run () {
+        doRun = true;
+        while (doRun) {
+            for (CosOperations operation : CosOperations.values()) {
+                IAssistant<IRequest> assistant = MainApp.assistantFor (operation);
+                if (assistant.hasNext())
+                    workUpRequest (assistant);
+            }
+        }
     }
 
-    protected int calcPriority () { return new Random(47).nextInt(20); }
+    private void workUpRequest (IAssistant<IRequest> assistant) {
 
-    @Override public Collection<ISertificate> getSertificatesByCause (ICustomer customer) {
-        return storage.findAllByCustomerIdAndCause(customer.getId(), customer.getCause());
+        IRequest request = assistant.next();
+        Object result = null;
+        IExecutant<ICertificate, IRequest> executant = MainApp.executantFor (request.getCustomer().getCause());
+
+        switch (request.getCustomer().getOperation()) {
+            case MAKE:  result = new Maker (executant).handle (request);
+                break;
+            case SAVE:  result = new Saver (executant).handle (request);
+                break;
+            case PRINT: result = new Printer (executant).handle (request);
+                break;
+            default: throw new RuntimeException ("Unknown type of CosOperations");
+        }
+        MainApp.putResult (request.getId(), result);
     }
 
-    @Override public Collection<ISertificate> getSertificates (ICustomer customer) {
-        return storage.findAllByCustomerId(customer.getId());
-    }
+    @Override public void stop () { doRun = false; }
 }

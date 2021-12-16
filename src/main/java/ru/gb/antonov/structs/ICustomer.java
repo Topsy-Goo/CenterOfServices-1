@@ -5,4 +5,6 @@ public interface ICustomer {
     Long   getId ();
 
     Causes getCause ();
+
+    CosOperations getOperation ();
 }
