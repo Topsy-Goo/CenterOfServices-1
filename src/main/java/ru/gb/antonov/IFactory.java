@@ -26,5 +26,5 @@ public interface IFactory<T> {
 
     IRequest newRequest (ICustomer customer, Integer priority);
 
-    IMediator getSingleMediator ();
+    //IMediator getSingleMediator ();
 }

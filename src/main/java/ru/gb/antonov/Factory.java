@@ -56,7 +56,7 @@ public class Factory implements IFactory<ICertificate> {
         return new Request (customer, priority);
     }
 
-    @Override public IMediator getSingleMediator () {
+/*    @Override public IMediator getSingleMediator () {
         return Mediator.getInstance (this);
-    }
+    }*/
 }
