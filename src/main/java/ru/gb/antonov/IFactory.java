@@ -1,6 +1,7 @@
 package ru.gb.antonov;
 
 import ru.gb.antonov.dispatcher.IDispatcher;
+import ru.gb.antonov.dispatcher.IMediator;
 import ru.gb.antonov.dispatcher.IReceptionist;
 import ru.gb.antonov.executants.IAssistant;
 import ru.gb.antonov.executants.IExecutant;
@@ -19,9 +20,11 @@ public interface IFactory<T> {
 
     IReceptionist<T> getSingleReceptioniist ();
 
-    IAssistant<IRequest> newAssistant ();
+    IAssistant<IRequest> getAssistant ();
 
-    IExecutant<T, IRequest> newExecutant ();
+    IExecutant<T, IRequest> getExecutant ();
 
     IRequest newRequest (ICustomer customer, Integer priority);
+
+    IMediator getSingleMediator ();
 }

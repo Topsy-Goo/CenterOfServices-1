@@ -6,7 +6,7 @@ import ru.gb.antonov.structs.IRequest;
 
 /** Изготавливаем сертификат и сохраняем его в IStorage.
 */
-public class Saver extends Handler <ICertificate, Boolean, IRequest> {
+public class Saver extends OperationHandler<ICertificate, Boolean, IRequest> {
 
     public Saver (IExecutant<ICertificate, IRequest> e) {
         super(e);

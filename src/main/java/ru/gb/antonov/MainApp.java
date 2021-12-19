@@ -10,27 +10,34 @@ import ru.gb.antonov.structs.Causes;
 import ru.gb.antonov.structs.CosOperations;
 import ru.gb.antonov.structs.IRequest;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class MainApp {
 
-    public  static IFactory<ICertificate>      factory = Factory.getInstance();
-    private static IStorage<ICertificate>      sertificateStorage;
-    private static IReceptionist<ICertificate> receptionist;
-    private static final Map<Long, Object>     results = new HashMap<>();
-    private static final Map<CosOperations, IAssistant<IRequest>>        assistants = new HashMap<>();
-    private static final Map<Causes, IExecutant<ICertificate, IRequest>> executants = new HashMap<>();
+    public  static       IFactory<ICertificate>      factory;
+    private static       IStorage<ICertificate>      sertificateStorage;
+    private static       IReceptionist<ICertificate> receptionist;
+    private static final ConcurrentMap<Long, Object> results;
+    private static final ConcurrentMap<CosOperations, IAssistant<IRequest>>        assistants;
+    private static final ConcurrentMap<Causes, IExecutant<ICertificate, IRequest>> executants;
+
+    static {
+        factory    = Factory.getInstance();
+        results    = new ConcurrentHashMap<>();
+        assistants = new ConcurrentHashMap<>();
+        executants = new ConcurrentHashMap<>();
+    }
 
     public static void main (String[] args) {
 
         for (CosOperations op : CosOperations.values())
-            assistants.put (op, factory.newAssistant());
+            assistants.put (op, factory.getAssistant());
 
         //Такое создание Executant'ов является упрощением. По идее, эти объекты не должны быть
         // одинаковыми. Они, как минмиум, должны по различную обрабатывать запросы.
         for (Causes c : Causes.values())
-            executants.put (c, factory.newExecutant());
+            executants.put (c, factory.getExecutant());
 
         IDispatcher<ICertificate> dispatcher = factory.getSingleDispatcher();
         dispatcher.run();

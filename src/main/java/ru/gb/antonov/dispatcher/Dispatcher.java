@@ -6,7 +6,7 @@ import ru.gb.antonov.executants.*;
 import ru.gb.antonov.structs.CosOperations;
 import ru.gb.antonov.structs.IRequest;
 
-public class Dispatcher implements IDispatcher<ICertificate> {
+public class Dispatcher extends AbsDispatcher<ICertificate, IRequest> implements IDispatcher<ICertificate> {
 
     private static       Dispatcher instance;
     private final static Object     MONITOR    = new Object();
@@ -29,28 +29,31 @@ public class Dispatcher implements IDispatcher<ICertificate> {
             for (CosOperations operation : CosOperations.values()) {
                 IAssistant<IRequest> assistant = MainApp.assistantFor (operation);
                 if (assistant.hasNext())
-                    workUpRequest (assistant);
+                    workUpRequest (assistant.next());
             }
         }
     }
 
-    private void workUpRequest (IAssistant<IRequest> assistant) {
+    @Override public void stop () { doRun = false; }
 
-        IRequest request = assistant.next();
-        Object result = null;
-        IExecutant<ICertificate, IRequest> executant = MainApp.executantFor (request.getCustomer().getCause());
+//----------------- реализация шаблона Шаблонный метод -------------------------------------
+
+    @Override protected OperationHandler<ICertificate, ?, IRequest> getOperationHandler (IRequest request) {
+
+        IExecutant<ICertificate, IRequest> executant =
+                        MainApp.executantFor (request.getCustomer().getCause());
 
         switch (request.getCustomer().getOperation()) {
-            case MAKE:  result = new Maker (executant).handle (request);
-                break;
-            case SAVE:  result = new Saver (executant).handle (request);
-                break;
-            case PRINT: result = new Printer (executant).handle (request);
-                break;
+            case MAKE:  return new Maker (executant);
+            case SAVE:  return new Saver (executant);
+            case PRINT: return new Printer (executant);
             default: throw new RuntimeException ("Unknown type of CosOperations");
         }
-        MainApp.putResult (request.getId(), result);
     }
 
-    @Override public void stop () { doRun = false; }
+    @Override protected Object getKey (IRequest request) { return request.getId(); }
+
+    @Override protected void putResult (Object key, Object result) {
+        MainApp.putResult ((Long) key, result);
+    }
 }

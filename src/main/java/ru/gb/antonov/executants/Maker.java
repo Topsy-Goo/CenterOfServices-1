@@ -5,7 +5,7 @@ import ru.gb.antonov.structs.IRequest;
 
 /** Изготавливаем сертификат и отдаём его заказчику.
 */
-public class Maker extends Handler <ICertificate, ICertificate, IRequest> {
+public class Maker extends OperationHandler<ICertificate, ICertificate, IRequest> {
 
     public Maker (IExecutant<ICertificate, IRequest> e) {
         super(e);

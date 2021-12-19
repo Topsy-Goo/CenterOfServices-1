@@ -5,7 +5,7 @@ import ru.gb.antonov.structs.IRequest;
 
 /** Изготавливаем сертификат и «распечатываем» его в String.
 */
-public class Printer extends Handler <ICertificate, String, IRequest> {
+public class Printer extends OperationHandler<ICertificate, String, IRequest> {
 
     public Printer (IExecutant<ICertificate, IRequest> e) {
         super(e);

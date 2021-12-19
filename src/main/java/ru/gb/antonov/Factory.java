@@ -1,9 +1,6 @@
 package ru.gb.antonov;
 
-import ru.gb.antonov.dispatcher.Dispatcher;
-import ru.gb.antonov.dispatcher.Receptionist;
-import ru.gb.antonov.dispatcher.IDispatcher;
-import ru.gb.antonov.dispatcher.IReceptionist;
+import ru.gb.antonov.dispatcher.*;
 import ru.gb.antonov.doctypes.ICertificate;
 import ru.gb.antonov.executants.Assistant;
 import ru.gb.antonov.executants.CertificatExecutant;
@@ -47,15 +44,19 @@ public class Factory implements IFactory<ICertificate> {
         return CertificateStorage.getInstance();
     }
 
-    @Override public IAssistant<IRequest> newAssistant () {     //main
+    @Override public IAssistant<IRequest> getAssistant () {     //main
         return new Assistant ();
     }
 
-    @Override public IExecutant<ICertificate, IRequest> newExecutant () {   //main
+    @Override public IExecutant<ICertificate, IRequest> getExecutant () {   //main
         return new CertificatExecutant();
     }
 
     @Override public IRequest newRequest (ICustomer customer, Integer priority) {   //recept
         return new Request (customer, priority);
+    }
+
+    @Override public IMediator getSingleMediator () {
+        return Mediator.getInstance (this);
     }
 }
