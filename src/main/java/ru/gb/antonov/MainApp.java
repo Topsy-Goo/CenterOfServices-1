@@ -5,6 +5,7 @@ import ru.gb.antonov.dispatcher.IReceptionist;
 import ru.gb.antonov.doctypes.ICertificate;
 import ru.gb.antonov.executants.IAssistant;
 import ru.gb.antonov.executants.IExecutant;
+import ru.gb.antonov.storage.IIdentityMap;
 import ru.gb.antonov.storage.IStorage;
 import ru.gb.antonov.structs.Causes;
 import ru.gb.antonov.structs.CosOperations;
@@ -16,7 +17,6 @@ import java.util.concurrent.ConcurrentMap;
 public class MainApp {
 
     public  static       IFactory<ICertificate>      factory;
-    private static       IStorage<ICertificate>      sertificateStorage;
     private static       IReceptionist<ICertificate> receptionist;
     private static final ConcurrentMap<Long, Object> results;
     private static final ConcurrentMap<CosOperations, IAssistant<IRequest>>        assistants;
@@ -31,6 +31,10 @@ public class MainApp {
 
     public static void main (String[] args) {
 
+    //инициализация (очерёдность имеет значение):
+        IStorage<ICertificate> sertificateStorage = factory.getSingleStorage();
+        IIdentityMap identityMap = factory.getSingleIdentityMap();
+
         for (CosOperations op : CosOperations.values())
             assistants.put (op, factory.getAssistant());
 
@@ -41,10 +45,17 @@ public class MainApp {
 
         IDispatcher<ICertificate> dispatcher = factory.getSingleDispatcher();
         dispatcher.run();
+        factory.getSinglePublisher();
         receptionist = factory.getSingleReceptioniist();
 
+    //работа:
         simulateCustomersFlow();
-        dispatcher.stop();
+
+    //Остановка приложения (в обратном порядке):
+        receptionist.stop();
+        dispatcher.stop();  //< по идее, нужно сперва дождаться окончания обработки всех сформированных запросов
+        identityMap.stop(); //< этот вызов должен выполняться до остановки хранилища (проверяется кэшь)
+        sertificateStorage.stop(); //< возможно, этот вызов должен делать dispatcher (или медиатор)
     }
 
     public static IAssistant<IRequest> assistantFor (CosOperations operation) {

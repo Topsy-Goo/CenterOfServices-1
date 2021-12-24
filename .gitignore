@@ -3,3 +3,5 @@
 /Описание.txt
 /backup.files/ICertificateBuilder.java
 /backup.files/LazyFactory.java
+/src/main/java/ru/gb/antonov/dispatcher/IMediator.java
+/src/main/java/ru/gb/antonov/dispatcher/Mediator.java

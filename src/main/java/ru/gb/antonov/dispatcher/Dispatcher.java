@@ -6,10 +6,11 @@ import ru.gb.antonov.executants.*;
 import ru.gb.antonov.structs.CosOperations;
 import ru.gb.antonov.structs.IRequest;
 
-public class Dispatcher extends AbsDispatcher<ICertificate, IRequest> implements IDispatcher<ICertificate> {
-
+public class Dispatcher extends AbsDispatcher<ICertificate, IRequest>
+                        implements IDispatcher<ICertificate>
+{
     private static       Dispatcher instance;
-    private final static Object     MONITOR    = new Object();
+    private final static Object     MONITOR = new Object();
     private              boolean    doRun;
 
     protected Dispatcher () {}

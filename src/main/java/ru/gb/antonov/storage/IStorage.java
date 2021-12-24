@@ -1,10 +1,17 @@
 package ru.gb.antonov.storage;
 
+import ru.gb.antonov.dispatcher.Stopable;
+import ru.gb.antonov.doctypes.ICertificate;
+
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.Collection;
 
-public interface IStorage <T> {
+public interface IStorage <T> extends Stopable {
 
-    T save (T t);
+    T save (T t) throws SQLException, IOException;
 
-    Collection<T> findAllByCustomerId (Long cid);
+    Collection<ICertificate> findAllByCustomerId (Long cid) throws SQLException;
+
+    void stop ();
 }

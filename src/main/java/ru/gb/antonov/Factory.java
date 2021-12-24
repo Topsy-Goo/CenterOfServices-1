@@ -8,8 +8,10 @@ import ru.gb.antonov.executants.IAssistant;
 import ru.gb.antonov.executants.IExecutant;
 import ru.gb.antonov.publisher.IPublisher;
 import ru.gb.antonov.publisher.RequestPublisher;
+import ru.gb.antonov.storage.IIdentityMap;
 import ru.gb.antonov.storage.IStorage;
 import ru.gb.antonov.storage.CertificateStorage;
+import ru.gb.antonov.storage.IdentityMap;
 import ru.gb.antonov.structs.*;
 
 public class Factory implements IFactory<ICertificate> {
@@ -56,7 +58,7 @@ public class Factory implements IFactory<ICertificate> {
         return new Request (customer, priority);
     }
 
-/*    @Override public IMediator getSingleMediator () {
-        return Mediator.getInstance (this);
-    }*/
+    @Override public IIdentityMap getSingleIdentityMap () {
+        return IdentityMap.getInstance();
+    }
 }

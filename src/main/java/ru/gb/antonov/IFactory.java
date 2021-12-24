@@ -1,11 +1,11 @@
 package ru.gb.antonov;
 
 import ru.gb.antonov.dispatcher.IDispatcher;
-import ru.gb.antonov.dispatcher.IMediator;
 import ru.gb.antonov.dispatcher.IReceptionist;
 import ru.gb.antonov.executants.IAssistant;
 import ru.gb.antonov.executants.IExecutant;
 import ru.gb.antonov.publisher.IPublisher;
+import ru.gb.antonov.storage.IIdentityMap;
 import ru.gb.antonov.storage.IStorage;
 import ru.gb.antonov.structs.ICustomer;
 import ru.gb.antonov.structs.IRequest;
@@ -26,5 +26,5 @@ public interface IFactory<T> {
 
     IRequest newRequest (ICustomer customer, Integer priority);
 
-    //IMediator getSingleMediator ();
+    IIdentityMap getSingleIdentityMap ();
 }

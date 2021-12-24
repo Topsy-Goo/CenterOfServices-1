@@ -5,21 +5,33 @@ import java.time.LocalDateTime;
 
 public class Certificate implements ICertificate {
 
-    private static long nextId = 0L;
-    private final  Long id;
-    private final  LocalDateTime timeStamp;
-    private        Long          customerId;
-    private        Causes        cause;
+    private Long          id;
+    private LocalDateTime timeStamp;
+    private Long          customerId;
+    private Causes        cause;
 
     private Certificate () {
-        id = nextId ++;
         timeStamp = LocalDateTime.now();
     }
 
-    public Long getId ()                   { return id; }
-    public LocalDateTime getTimeStamp ()   { return timeStamp; }
+    @Override public Long getId ()         { return id; }
+    @Override public boolean setId (long value) {
+        if (id == null)
+            id = value;
+        return id == value;
+    }
+    @Override public LocalDateTime getTimeStamp ()   { return timeStamp; }
+    @Override public void setTimeStamp (LocalDateTime value) { timeStamp = value; }
+
     @Override public Long getCustomerId () { return customerId; }
+    @Override public void setCustomerId (Long value) { customerId = value; }
+
     @Override public Causes getCause ()    { return cause; }
+    @Override public void setCause (Causes value)    { cause = value; }
+
+    public static Certificate emptyCertificate () {
+        return new Certificate();
+    }
 
 //-------------- реализация шаблона builder для создания объекта Certificate -------------
 
@@ -28,7 +40,7 @@ public class Certificate implements ICertificate {
 /** Вложенный класс может использовать приватные члены внешнего класса. */
     public static class Builder {
 
-        private final Certificate certificate = new Certificate();
+        private final Certificate certificate = emptyCertificate();
 
         private Builder(){}
 
@@ -40,6 +52,6 @@ public class Certificate implements ICertificate {
             certificate.cause = c;
             return this;
         }
-        public Certificate build () { return certificate; }
+        public ICertificate build () { return certificate; }
     }
 }
