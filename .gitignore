@@ -5,3 +5,6 @@
 /backup.files/LazyFactory.java
 /src/main/java/ru/gb/antonov/dispatcher/IMediator.java
 /src/main/java/ru/gb/antonov/dispatcher/Mediator.java
+/target/cos1.war
+/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+/target/
