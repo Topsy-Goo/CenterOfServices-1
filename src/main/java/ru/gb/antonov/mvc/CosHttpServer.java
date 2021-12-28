@@ -19,9 +19,6 @@ abstract public class CosHttpServer implements Runnable, Stopable, Closeable {
     protected OutputStream ost;
     protected String       threadName;
 
-    //protected CosHttpServer (Socket socket) throws IOException {
-    //}
-
     protected static class MyHttpHeader {
         String function;
         String path;
@@ -83,7 +80,7 @@ abstract public class CosHttpServer implements Runnable, Stopable, Closeable {
     }
 
 /** Парсим первую строку html-запроса. */
-    private void parseHttpHeader1stLine (String firstLine, MyHttpHeader myHeader) {
+    protected void parseHttpHeader1stLine (String firstLine, MyHttpHeader myHeader) {
         String[] ars = firstLine.split ("\\s", 3);
         int length = ars.length;
         myHeader.function = (length > 0) ? ars[0] : null;

@@ -8,100 +8,23 @@
 	<groupId>ru.gb.antonov</groupId>
 	<artifactId>CoS-1</artifactId>
 	<version>1.0-SNAPSHOT</version>
-	<!--<packaging>war</packaging>-->			<!-- mvc -->
-
-	<!--<name>java6 Maven Webapp</name>-->						<!-- mvc -->
-	<!-- FIXME change it to the project's website -->	<!-- mvc -->
-	<!--<url>http://www.example.com</url>-->					<!-- mvc -->
 
 	<properties>
-		<!--<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>-->	<!-- mvc -->
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
 	</properties>
 
-<!--	<dependencyManagement>	&lt;!&ndash; mvc &ndash;&gt;
-		<dependencies>		&lt;!&ndash; mvc &ndash;&gt;
-			<dependency>	&lt;!&ndash; mvc &ndash;&gt;
-				<groupId>io.projectreactor</groupId>
-				<artifactId>reactor-bom</artifactId>
-				<version>2020.0.14</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>-->
-
 	<dependencies>
-
-<!--		<dependency>		&lt;!&ndash; mvc &ndash;&gt;
-			<groupId>io.projectreactor.netty</groupId>
-			<artifactId>reactor-netty-core</artifactId>
-		</dependency>
-		<dependency>		&lt;!&ndash; mvc &ndash;&gt;
-			<groupId>io.projectreactor.netty</groupId>
-			<artifactId>reactor-netty-http</artifactId>
-		</dependency>-->
-
-		<!-- https://mvnrepository.com/artifact/org.json/json -->
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20211205</version>
 		</dependency>
-
 		<dependency>
 			<groupId>org.xerial</groupId>
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.34.0</version>
 		</dependency>
-<!--		<dependency>		&lt;!&ndash; mvc &ndash;&gt;&lt;!&ndash; для Servlet API &ndash;&gt;
-			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
-			<version>4.0.1</version>
-			<scope>provided</scope>	&lt;!&ndash; << означает, что полная реализация Servlet API будет предоставлена сервером приложений &ndash;&gt;
-		</dependency>
-		<dependency>		&lt;!&ndash; mvc &ndash;&gt;&lt;!&ndash; для логирования (управлением логами приложения также занимается сервер приложений) &ndash;&gt;
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.7.25</version>
-			<scope>provided</scope>
-		</dependency>-->
 	</dependencies>
 
-<!--	<build>					&lt;!&ndash; mvc &ndash;&gt;
-		<finalName>cos1</finalName>	&lt;!&ndash; mvc &ndash;&gt;
-
-		<plugins>			&lt;!&ndash; mvc &ndash;&gt;
-			<plugin>		&lt;!&ndash; mvc &ndash;&gt;
-			   <groupId>org.wildfly.plugins</groupId>
-			   <artifactId>wildfly-maven-plugin</artifactId>
-			   <version>2.0.1.Final</version>
-			</plugin>
-		</plugins>
-
-		<pluginManagement>	&lt;!&ndash; mvc &ndash;&gt;
-			<plugins>		&lt;!&ndash; mvc &ndash;&gt;
-				<plugin>	&lt;!&ndash; mvc &ndash;&gt;
-				  <artifactId>maven-clean-plugin</artifactId>
-				  <version>3.1.0</version>
-				</plugin>
-
-				<plugin>	&lt;!&ndash; mvc &ndash;&gt;
-				  <artifactId>maven-war-plugin</artifactId>
-				  <version>3.2.2</version>
-				</plugin>
-				<plugin>	&lt;!&ndash; mvc &ndash;&gt;
-				  <artifactId>maven-install-plugin</artifactId>
-				  <version>2.5.2</version>
-				</plugin>
-				<plugin>	&lt;!&ndash; mvc &ndash;&gt;
-				  <artifactId>maven-deploy-plugin</artifactId>
-				  <version>2.8.2</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>-->
-
 </project>
-<!-- mvc -->	<!-- - означает, что добавлено для превращения проекта в MVC-проект -->

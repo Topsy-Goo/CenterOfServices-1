@@ -36,6 +36,9 @@ public class MainApp {
     private static final ConcurrentMap<Long, Object> results;
     private static final ConcurrentMap<CosOperations, IAssistant<IRequest>>        assistants;
     private static final ConcurrentMap<Causes, IExecutant<ICertificate, IRequest>> executants;
+    private static       IDispatcher<ICertificate> dispatcher;
+    private static       IIdentityMap              identityMap;
+    private static       IStorage<ICertificate>    sertificateStorage;
 
     public  static final int    PAGE_SERVER_PORT = 5555;
     public  static final int    REQUEST_SERVER_PORT = 4444;
@@ -51,8 +54,8 @@ public class MainApp {
     public static void main (String[] args) {
 
     //инициализация (очерёдность имеет значение):
-        IStorage<ICertificate> sertificateStorage = factory.getSingleStorage();
-        IIdentityMap identityMap = factory.getSingleIdentityMap();
+        sertificateStorage = factory.getSingleStorage();
+        identityMap = factory.getSingleIdentityMap();
 
         for (CosOperations op : CosOperations.values())
             assistants.put (op, factory.getAssistant (op));
@@ -62,19 +65,13 @@ public class MainApp {
         for (Causes c : Causes.values())
             executants.put (c, factory.getExecutant (c));
 
-        IDispatcher<ICertificate> dispatcher = factory.getSingleDispatcher();
+        dispatcher = factory.getSingleDispatcher();
         new Thread (dispatcher).start();
         factory.getSinglePublisher();
         receptionist = factory.getSingleReceptioniist();
 
-    //работа:
+    //работа и остановка приложения:
         simulateCustomersFlow();
-
-    //Остановка приложения (в обратном порядке):
-        receptionist.stop();
-        dispatcher.stop();  //< по идее, нужно сперва дождаться окончания обработки всех сформированных запросов
-        identityMap.stop(); //< этот вызов должен выполняться до остановки хранилища (проверяется кэшь)
-        sertificateStorage.stop(); //< возможно, этот вызов должен делать dispatcher (или медиатор)
     }
 
     public static IAssistant<IRequest> assistantFor (CosOperations operation) {
@@ -93,8 +90,6 @@ public class MainApp {
 
 /** имитируем поток клиентов */
     private static void simulateCustomersFlow () {
-
-        lnprint ("**************** simulateCustomersFlow() начал выполняться. ("+Thread.currentThread()+")");
         try {
             new Thread (new HttpPageServer (PAGE_SERVER_PORT), "pageServer").start();
             HttpRequestController.go (REQUEST_SERVER_PORT);
@@ -103,7 +98,11 @@ public class MainApp {
             e.printStackTrace();
         }
         finally {
-            lnprint ("**************** simulateCustomersFlow() закончил выполняться. ("+Thread.currentThread()+")");
+        //Остановка приложения (в обратном порядке):
+            receptionist.stop();
+            dispatcher.stop();  //< по идее, нужно сперва дождаться окончания обработки всех сформированных запросов
+            identityMap.stop(); //< этот вызов должен выполняться до остановки хранилища (проверяется кэшь)
+            sertificateStorage.stop(); //< возможно, этот вызов должен делать dispatcher (или медиатор)
         }
     }
 }

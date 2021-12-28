@@ -46,7 +46,7 @@ public class HttpPageServer extends CosHttpServer {
 /** Обрабатываем один запрос от браузера.<p>
 Предполагаем, что браузеру нужен какой-то файл, имя которого он указал в заголовке запроса.
 Также предполагаем, что кроме заголовка в запросе ничего нет. */
-    void oneJob () {
+    private void oneJob () {
         long requestNumber = requestCounter++;
         lnprint ("["+threadName+"]: ** Получен запрос pg"+requestNumber+" **");
 
