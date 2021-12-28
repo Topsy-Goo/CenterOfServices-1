@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Collection;
 
+import static ru.gb.antonov.Factory.lnprint;
+import static ru.gb.antonov.Factory.println;
+
 public class CertificateStorage implements IStorage<ICertificate> {
 
     private static       CertificateStorage instance;
@@ -18,17 +21,18 @@ public class CertificateStorage implements IStorage<ICertificate> {
 
     private CertificateStorage () {
         try {
-            connection = DriverManager.getConnection ("jdbc:sqlite:cos.db");
+            connection = DriverManager.getConnection ("jdbc:sqlite:cos1.db");
             Class.forName ("org.sqlite.JDBC");
             statement = connection.createStatement();
             ps4Saving = connection.prepareStatement (
-                "INSERT INTO certificates (id, timestamp, causes_id, customer_id) VALUES (?, ?, ?, ?);");
+                "INSERT INTO certificates (id, timestamp, causes, customer_id) VALUES (?, ?, ?, ?);");
 
             ResultSet rs = statement.executeQuery ("SELECT MAX(id) FROM certificates;");
-            if (rs.first())
+            if (rs.next())//first())    < java.sql.SQLException: ResultSet is TYPE_FORWARD_ONLY
                 nextId = rs.getLong(1) +1;
         }
         catch (SQLException | ClassNotFoundException e) { throw new RuntimeException (e); }
+        lnprint ("Экземпляр CertificateStorage создан.");
     }
 
     @Override public void stop () {
@@ -42,6 +46,7 @@ public class CertificateStorage implements IStorage<ICertificate> {
             connection = null;
             statement = null;
             ps4Saving = null;
+            lnprint ("Вызван CertificateStorage.stop().");
         }
     }
 

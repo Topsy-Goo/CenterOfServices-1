@@ -1,4 +1,4 @@
-package ru.gb.antonov.dispatcher;
+package ru.gb.antonov;
 
 @FunctionalInterface
 public interface Stopable {

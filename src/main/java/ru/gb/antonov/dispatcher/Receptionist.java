@@ -8,6 +8,8 @@ import ru.gb.antonov.structs.IRequest;
 
 import java.util.Random;
 
+import static ru.gb.antonov.Factory.lnprint;
+
 public class Receptionist implements IReceptionist<ICertificate> {
 
     private static       Receptionist instance;
@@ -18,10 +20,12 @@ public class Receptionist implements IReceptionist<ICertificate> {
     private Receptionist () {
         publisher  = MainApp.factory.getSinglePublisher();
         busy = false;
+        lnprint ("Экземпляр Receptionist создан.");
     }
 
     @Override public void stop () {
         busy = true;
+        lnprint ("Вызван Receptionist.stop().");
     }
 
     public static Receptionist getInstance () {

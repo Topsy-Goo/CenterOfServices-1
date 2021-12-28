@@ -19,7 +19,9 @@ public class Factory implements IFactory<ICertificate> {
     public  static       IFactory<ICertificate> instance;
     private static final Object   MONITOR = new Object();
 
-    private Factory () {}
+    private Factory () {
+        lnprint ("Экземпляр Factory создан.");
+    }
 
     public static IFactory<ICertificate> getInstance () {
         if (instance == null)
@@ -46,12 +48,12 @@ public class Factory implements IFactory<ICertificate> {
         return CertificateStorage.getInstance();
     }
 
-    @Override public IAssistant<IRequest> getAssistant () {     //main
-        return new Assistant ();
+    @Override public IAssistant<IRequest> getAssistant (CosOperations op) {     //main
+        return new Assistant (op);
     }
 
-    @Override public IExecutant<ICertificate, IRequest> getExecutant () {   //main
-        return new CertificatExecutant();
+    @Override public IExecutant<ICertificate, IRequest> getExecutant (Causes c) {   //main
+        return new CertificatExecutant (c);
     }
 
     @Override public IRequest newRequest (ICustomer customer, Integer priority) {   //recept
@@ -60,5 +62,25 @@ public class Factory implements IFactory<ICertificate> {
 
     @Override public IIdentityMap getSingleIdentityMap () {
         return IdentityMap.getInstance();
+    }
+
+    public static void lnprint (String s) {
+        System.out.print ("\n" + s);
+    }
+
+    public static void println (String s) {
+        System.out.print (s + "\n");
+    }
+
+    public static void lnprintf (String sf, Object ... ooo) {
+        System.out.printf ("\n" + sf, ooo);
+    }
+
+    public static void errlnprintf (String sf, Object ... ooo) {
+        System.err.printf ("\n" + sf, ooo);
+    }
+
+    public static boolean isStringEmpty (String s) {
+        return s == null || s.trim().isEmpty();
     }
 }

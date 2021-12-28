@@ -3,6 +3,8 @@ package ru.gb.antonov.doctypes;
 import ru.gb.antonov.structs.Causes;
 import java.time.LocalDateTime;
 
+import static ru.gb.antonov.Factory.lnprint;
+
 public class Certificate implements ICertificate {
 
     private Long          id;
@@ -33,6 +35,10 @@ public class Certificate implements ICertificate {
         return new Certificate();
     }
 
+    @Override public String toString () {
+        return String.format ("{id:%d, %s, customer:%d, cause:%s}", id, timeStamp, customerId, cause.name());
+    }
+
 //-------------- реализация шаблона builder для создания объекта Certificate -------------
 
     public static Builder builder() { return new Builder(); }
@@ -52,6 +58,9 @@ public class Certificate implements ICertificate {
             certificate.cause = c;
             return this;
         }
-        public ICertificate build () { return certificate; }
+        public ICertificate build () {
+            lnprint ("Создан сертификат "+certificate+".");
+            return certificate;
+        }
     }
 }

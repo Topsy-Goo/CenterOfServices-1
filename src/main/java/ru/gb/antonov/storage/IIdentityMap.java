@@ -1,6 +1,6 @@
 package ru.gb.antonov.storage;
 
-import ru.gb.antonov.dispatcher.Stopable;
+import ru.gb.antonov.Stopable;
 import ru.gb.antonov.doctypes.ICertificate;
 
 import java.io.IOException;

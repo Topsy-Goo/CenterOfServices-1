@@ -6,6 +6,8 @@ import ru.gb.antonov.executants.*;
 import ru.gb.antonov.structs.CosOperations;
 import ru.gb.antonov.structs.IRequest;
 
+import static ru.gb.antonov.Factory.lnprint;
+
 public class Dispatcher extends AbsDispatcher<ICertificate, IRequest>
                         implements IDispatcher<ICertificate>
 {
@@ -13,7 +15,9 @@ public class Dispatcher extends AbsDispatcher<ICertificate, IRequest>
     private final static Object     MONITOR = new Object();
     private              boolean    doRun;
 
-    protected Dispatcher () {}
+    protected Dispatcher () {
+        lnprint ("Экземпляр Dispatcher создан.");
+    }
 
     public static IDispatcher<ICertificate> getInstance () {
         if (instance == null)
@@ -33,9 +37,13 @@ public class Dispatcher extends AbsDispatcher<ICertificate, IRequest>
                     workUpRequest (assistant.next());
             }
         }
+        lnprint ("Dispatcher.run() завершился.");
     }
 
-    @Override public void stop () { doRun = false; }
+    @Override public void stop () {
+        doRun = false;
+        lnprint ("Вызван Dispatcher.stop().");
+    }
 
 //----------------- реализация шаблона Шаблонный метод -------------------------------------
 

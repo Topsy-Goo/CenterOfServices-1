@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import static ru.gb.antonov.Factory.lnprint;
+
 public class IdentityMap implements IIdentityMap {
 
     private static IdentityMap instance;
@@ -18,6 +20,7 @@ public class IdentityMap implements IIdentityMap {
 
     private IdentityMap () {
         sertificateStorage = MainApp.factory.getSingleStorage();
+        lnprint ("Экземпляр IdentityMap создан.");
     }
 
     public static IIdentityMap getInstance () {
@@ -34,6 +37,7 @@ public class IdentityMap implements IIdentityMap {
         Возможно, для этого придётся сделать внутренний класс, в котором будут поля ICertificate и boolean
         Changed.
         */
+        lnprint ("Вызван IdentityMap.stop().");
     }
 
 /** Сохраняет сертификат в хранилище и удалёет его из кэша. */

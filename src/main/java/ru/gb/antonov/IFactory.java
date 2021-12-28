@@ -7,6 +7,8 @@ import ru.gb.antonov.executants.IExecutant;
 import ru.gb.antonov.publisher.IPublisher;
 import ru.gb.antonov.storage.IIdentityMap;
 import ru.gb.antonov.storage.IStorage;
+import ru.gb.antonov.structs.Causes;
+import ru.gb.antonov.structs.CosOperations;
 import ru.gb.antonov.structs.ICustomer;
 import ru.gb.antonov.structs.IRequest;
 
@@ -20,9 +22,9 @@ public interface IFactory<T> {
 
     IReceptionist<T> getSingleReceptioniist ();
 
-    IAssistant<IRequest> getAssistant ();
+    IAssistant<IRequest> getAssistant (CosOperations op);
 
-    IExecutant<T, IRequest> getExecutant ();
+    IExecutant<T, IRequest> getExecutant (Causes cause);
 
     IRequest newRequest (ICustomer customer, Integer priority);
 

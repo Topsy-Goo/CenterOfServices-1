@@ -1,18 +1,33 @@
 package ru.gb.antonov;
 
+//import javafx.application.Application;
+//import reactor.core.publisher.Mono;
+//import reactor.netty.DisposableServer;
+//import reactor.netty.http.server.HttpServer;
 import ru.gb.antonov.dispatcher.IDispatcher;
 import ru.gb.antonov.dispatcher.IReceptionist;
 import ru.gb.antonov.doctypes.ICertificate;
 import ru.gb.antonov.executants.IAssistant;
 import ru.gb.antonov.executants.IExecutant;
+import ru.gb.antonov.mvc.HttpPageServer;
+import ru.gb.antonov.mvc.HttpRequestController;
 import ru.gb.antonov.storage.IIdentityMap;
 import ru.gb.antonov.storage.IStorage;
 import ru.gb.antonov.structs.Causes;
 import ru.gb.antonov.structs.CosOperations;
 import ru.gb.antonov.structs.IRequest;
 
+import java.io.IOException;
+//import java.net.ServerSocket;
+//import java.net.Socket;
+import java.net.URISyntaxException;
+//import java.nio.file.Path;
+//import java.nio.file.Paths;
+//import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import static ru.gb.antonov.Factory.lnprint;
 
 public class MainApp {
 
@@ -21,6 +36,10 @@ public class MainApp {
     private static final ConcurrentMap<Long, Object> results;
     private static final ConcurrentMap<CosOperations, IAssistant<IRequest>>        assistants;
     private static final ConcurrentMap<Causes, IExecutant<ICertificate, IRequest>> executants;
+
+    public  static final int    PAGE_SERVER_PORT = 5555;
+    public  static final int    REQUEST_SERVER_PORT = 4444;
+    public  static final String PAGE_DEFAULT     = "/index.html";
 
     static {
         factory    = Factory.getInstance();
@@ -36,15 +55,15 @@ public class MainApp {
         IIdentityMap identityMap = factory.getSingleIdentityMap();
 
         for (CosOperations op : CosOperations.values())
-            assistants.put (op, factory.getAssistant());
+            assistants.put (op, factory.getAssistant (op));
 
         //Такое создание Executant'ов является упрощением. По идее, эти объекты не должны быть
         // одинаковыми. Они, как минмиум, должны по различную обрабатывать запросы.
         for (Causes c : Causes.values())
-            executants.put (c, factory.getExecutant());
+            executants.put (c, factory.getExecutant (c));
 
         IDispatcher<ICertificate> dispatcher = factory.getSingleDispatcher();
-        dispatcher.run();
+        new Thread (dispatcher).start();
         factory.getSinglePublisher();
         receptionist = factory.getSingleReceptioniist();
 
@@ -72,6 +91,20 @@ public class MainApp {
 
     public static Object getResult (Long requestId) { return results.get (requestId); }
 
-    private static void simulateCustomersFlow () { /* имитируем поток клиентов */ }
+/** имитируем поток клиентов */
+    private static void simulateCustomersFlow () {
+
+        lnprint ("**************** simulateCustomersFlow() начал выполняться. ("+Thread.currentThread()+")");
+        try {
+            new Thread (new HttpPageServer (PAGE_SERVER_PORT), "pageServer").start();
+            HttpRequestController.go (REQUEST_SERVER_PORT);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            lnprint ("**************** simulateCustomersFlow() закончил выполняться. ("+Thread.currentThread()+")");
+        }
+    }
 }
 

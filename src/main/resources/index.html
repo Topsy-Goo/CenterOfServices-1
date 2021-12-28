@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Center of Service</title>
+
+	<!-- Урезанная версия ангулара — то что нужно (это его база, но есть и дополнения): -->
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.0/angular.min.js"></script>
+
+</head>
+<body style="padding:20px; font-size:20px;">
+
+	<div ng-app="cos1app" ng-controller="formCustomer">
+		<form novalidate>
+			<table cellpadding="5">
+				<tr><td>Customer ID:</td>
+					<td><input type="number" ng-model="customer.id">
+					</td>
+				</tr>
+				<tr><td>Causes:</td>
+					<td><select ng-model="customer.cause">
+						<option value="">
+						<option value="ONE">ONE
+						<option value="TWO">TWO
+						<option value="THREE">THREE
+						<option value="FOUR">FOUR
+						</select>
+					</td>
+				</tr>
+				<tr><td>CosOperations:</td>
+					<td><select ng-model="customer.operation">
+						<option value="">
+						<option value="MAKE">MAKE
+						<option value="SAVE">SAVE
+						<option value="PRINT">PRINT
+						</select>
+					</td>
+				</tr>
+			</table>
+			<p>form = {{customer}}</p>
+			<button ng-click="sendRequest (customer)">Send customer info</button>
+		</form>
+
+		<script>
+			angular.module('cos1app', []).controller('formCustomer', function ($scope, $http)
+			{
+				$scope.sendRequest = function (c)
+				{
+					console.log (c);
+					alert ('Запрос создан.');
+					$http({
+						method : "POST",
+						url : "http://localhost:4444/request",
+						data: c
+					})
+					.then(
+					function (response)	{	$scope.content = response.data;		},
+					function (response)	{	$scope.content = "Something went wrong";	});
+				};
+			});
+		</script>
+	</div>
+<!-- Незнаю, какое из приложений несёт за это ответственность, но удаление ниже следующих трёх строк не
+ даёт нормально забирать данные со страницы. Совсем бесплатного софта нет, — за всё приходится платить. -->
+<script>
+//angular.module('myApp', []).controller('myCtrl', function() {});
+</script>
+</body>
+</html>
