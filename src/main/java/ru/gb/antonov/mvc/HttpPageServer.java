@@ -53,7 +53,7 @@ public class HttpPageServer extends CosHttpServer {
         try (InputStreamReader reader = new InputStreamReader (ist);
              BufferedReader br = new BufferedReader (reader);)
         {
-            sendStatus (102, "PROCESSING");   //< без этой строки браузер не желает работать, причём, кажется, ни что другое его не устраивает, даже 200-OK.
+            //sendStatus (102, "PROCESSING");   //< без этой строки браузер не желает работать, причём, кажется, ни что другое его не устраивает, даже 200-OK.
             MyHttpHeader myHeader = readInputHeader (br);
             String pathString = myHeader.path;
 
@@ -94,7 +94,7 @@ public class HttpPageServer extends CosHttpServer {
     }
 
 /** Вытягиваем в строку текстовый файл. */
-    private static String readFileToString (Path path) throws IOException {
+    public static String readFileToString (Path path) throws IOException {
         String result = null;
         if (Files.exists (path)) {
             BufferedReader br = Files.newBufferedReader (path, StandardCharsets.UTF_8);

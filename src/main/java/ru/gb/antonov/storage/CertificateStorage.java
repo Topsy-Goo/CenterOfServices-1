@@ -7,7 +7,6 @@ import java.sql.*;
 import java.util.Collection;
 
 import static ru.gb.antonov.Factory.lnprint;
-import static ru.gb.antonov.Factory.println;
 
 public class CertificateStorage implements IStorage<ICertificate> {
 

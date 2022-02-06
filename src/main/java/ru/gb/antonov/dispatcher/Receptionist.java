@@ -49,7 +49,7 @@ public class Receptionist implements IReceptionist<ICertificate> {
         return busy ? null : MainApp.getResult (requestId);
     }
 
-    private Integer calcPriority () { return new Random(47).nextInt(20); }
+    private Integer calcPriority () { return new Random().nextInt(5); }
 
     private boolean publish (IRequest request) { return publisher.publish (request); }
 }

@@ -8,7 +8,7 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
-import static ru.gb.antonov.Factory.lnprint;
+import static ru.gb.antonov.Factory.*;
 
 abstract public class CosHttpServer implements Runnable, Stopable, Closeable {
 
@@ -81,11 +81,16 @@ abstract public class CosHttpServer implements Runnable, Stopable, Closeable {
 
 /** Парсим первую строку html-запроса. */
     protected void parseHttpHeader1stLine (String firstLine, MyHttpHeader myHeader) {
-        String[] ars = firstLine.split ("\\s", 3);
-        int length = ars.length;
-        myHeader.function = (length > 0) ? ars[0] : null;
-        myHeader.path     = (length > 1) ? ars[1] : null;
-        myHeader.protocol = (length > 2) ? ars[2] : null;
+        if (isStringEmpty (firstLine)) {
+            errlnprint ("Пустой запрос ?! Серьёзно?! И что мне с ним делать?!");
+        }
+        else {
+            String[] ars = firstLine.split ("\\s", 3);
+            int length = ars.length;
+            myHeader.function = (length > 0) ? ars[0] : null;
+            myHeader.path     = (length > 1) ? ars[1] : null;
+            myHeader.protocol = (length > 2) ? ars[2] : null;
+        }
     }
 
     protected void sendLine (String line) throws IOException {

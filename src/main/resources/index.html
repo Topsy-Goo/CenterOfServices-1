@@ -43,21 +43,25 @@
 		</form>
 	</div>
 	<script>
-		var app = angular.module('cos1app', []);
-		app.controller('formCustomer', function ($scope, $http)
+		angular.module('cos1app', []).controller('formCustomer', function ($scope, $http)
 		{
 			$scope.sendRequest = function (c)
 			{
-				console.log (c);
-				alert ('Запрос создан.');
 				$http({
 					method : "POST",
 					url : "http://localhost:4444/request",
 					data: c
 				})
 				.then(
-				function (response)	{	$scope.content = response.data;		},
-				function (response)	{	$scope.content = "Something went wrong";	});
+				function (response)
+				{
+					console.log (c);
+					alert ('Запрос создан.');
+				},
+				function (response)
+				{
+					alert ('ОШИБКА!\rНе удалось создать запрос.');
+				});
 			};
 		});
 	</script>

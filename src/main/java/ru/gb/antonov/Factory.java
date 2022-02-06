@@ -76,6 +76,10 @@ public class Factory implements IFactory<ICertificate> {
         System.out.printf ("\n" + sf, ooo);
     }
 
+    public static void errlnprint (String sf, Object ... ooo) {
+        System.err.printf ("\n" + sf, ooo);
+    }
+
     public static void errlnprintf (String sf, Object ... ooo) {
         System.err.printf ("\n" + sf, ooo);
     }

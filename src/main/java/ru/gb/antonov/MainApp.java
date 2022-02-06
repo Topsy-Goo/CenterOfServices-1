@@ -1,9 +1,5 @@
 package ru.gb.antonov;
 
-//import javafx.application.Application;
-//import reactor.core.publisher.Mono;
-//import reactor.netty.DisposableServer;
-//import reactor.netty.http.server.HttpServer;
 import ru.gb.antonov.dispatcher.IDispatcher;
 import ru.gb.antonov.dispatcher.IReceptionist;
 import ru.gb.antonov.doctypes.ICertificate;
@@ -17,13 +13,6 @@ import ru.gb.antonov.structs.Causes;
 import ru.gb.antonov.structs.CosOperations;
 import ru.gb.antonov.structs.IRequest;
 
-import java.io.IOException;
-//import java.net.ServerSocket;
-//import java.net.Socket;
-import java.net.URISyntaxException;
-//import java.nio.file.Path;
-//import java.nio.file.Paths;
-//import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -42,7 +31,7 @@ public class MainApp {
 
     public  static final int    PAGE_SERVER_PORT = 5555;
     public  static final int    REQUEST_SERVER_PORT = 4444;
-    public  static final String PAGE_DEFAULT     = "/index.html";
+    public  static final String PAGE_DEFAULT     = "index.html"/**//*"main.html"*/;
 
     static {
         factory    = Factory.getInstance();
@@ -90,6 +79,7 @@ public class MainApp {
 
 /** имитируем поток клиентов */
     private static void simulateCustomersFlow () {
+        lnprint ("--------------- Начало имитации потока клиентов. ---------------");
         try {
             new Thread (new HttpPageServer (PAGE_SERVER_PORT), "pageServer").start();
             HttpRequestController.go (REQUEST_SERVER_PORT);
@@ -98,6 +88,7 @@ public class MainApp {
             e.printStackTrace();
         }
         finally {
+            lnprint ("--------------- Конец имитации потока клиентов. ---------------");
         //Остановка приложения (в обратном порядке):
             receptionist.stop();
             dispatcher.stop();  //< по идее, нужно сперва дождаться окончания обработки всех сформированных запросов
